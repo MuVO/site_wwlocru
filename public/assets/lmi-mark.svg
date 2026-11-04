@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="350 620 700 700">
+  <defs>
+    <clipPath id="facebook">
+      <rect x="0" y="0" width="1920" height="1920" />
+    </clipPath>
+  </defs>
+  <g clip-path="url(#facebook)">
+
+    <g transform="scale(4.8)">
+      <defs>
+<linearGradient gradientUnits="userSpaceOnUse" id="color-1" x1="182.54" x2="182.54" y1="234.25" y2="268.36">
+<stop offset="0" stop-color="#4b08af"/>
+<stop offset=".33333" stop-color="#e526ef"/>
+<stop offset=".66667" stop-color="#8020bc"/>
+<stop offset="1" stop-color="#ea07ad"/>
+</linearGradient>
+<linearGradient gradientUnits="userSpaceOnUse" id="color-2" x1="148.36" x2="148.36" y1="210.26" y2="267.74">
+<stop offset="0" stop-color="#0a8423"/>
+<stop offset=".5" stop-color="#3bd3cc"/>
+<stop offset="1" stop-color="#d0ea4b"/>
+</linearGradient>
+</defs>
+<g fill="none" fill-rule="none" font-family="none" font-size="none" font-weight="none" stroke-dasharray="" stroke-miterlimit="10" stroke-width="none" style="mix-blend-mode:normal" text-anchor="none">
+<g id="symbol">
+<g id="construct">
+<rect fill="none" fill-rule="nonzero" height="512" stroke-width="1" transform="scale(.26704)" width="512" x="299.58" y="492.95"/>
+<g fill="#f45650" fill-rule="evenodd" id="circle_sym_2_4" stroke="#000" stroke-opacity="0" stroke-width="0">
+<path d="m216.73 200-0.00916-1.1305c-0.59766-36.862-30.371-66.631-67.234-67.223l-1.1192-0.00897 0.00916 1.1305c0.59766 36.862 30.371 66.631 67.234 67.223z" id="Path"/>
+</g>
+<rect fill="none" fill-rule="nonzero" height="512" stroke-width="1" transform="scale(.26704)" width="512" x="299.58" y="492.95"/>
+<g fill="#0a2fb2" fill-rule="evenodd" id="circle_sym_2_12" stroke="#000" stroke-opacity="0" stroke-width="0">
+<path d="m210.64 228.23c3.9065-8.6052 6.0821-18.163 6.0821-28.229 0-37.756-30.607-68.363-68.363-68.363l0.65877 0.0044c-0.43492 3.5873-0.65877 7.2396-0.65877 10.944 0 39.761 25.786 73.5 61.548 85.405z" id="Path"/>
+</g>
+<rect fill="none" fill-rule="nonzero" height="513" stroke-width="1" transform="scale(.26704 .26652)" width="512" x="299.58" y="493.92"/>
+<g fill="url(#color-1)" fill-rule="evenodd" id="circle_sym_2_5" stroke="#000" stroke-opacity="0" stroke-width="0">
+<path d="m216.73 200.13-0.00916 1.1283c-0.59766 36.79-30.371 66.502-67.234 67.092l-1.1192 0.00896 0.00916-1.1283c0.59766-36.79 30.371-66.502 67.234-67.092z" id="Path"/>
+</g>
+<rect fill="none" fill-rule="nonzero" height="513" stroke-width="1" transform="scale(.26704 .26652)" width="512" x="299.58" y="493.92"/>
+<g fill="#4423a8" fill-rule="evenodd" id="circle_sym_2_1" stroke="#000" stroke-opacity="0" stroke-width="0">
+<path d="m216.73 200.13c0 37.682-30.607 68.229-68.363 68.229s-68.363-30.547-68.363-68.229 30.607-68.229 68.363-68.229 68.363 30.547 68.363 68.229z" id="Oval-Copy"/>
+</g>
+<rect fill="none" fill-rule="nonzero" height="513" stroke-width="1" transform="scale(.26704 .26652)" width="512" x="299.58" y="493.92"/>
+<g fill="#fc8853" fill-rule="evenodd" id="circle_sym_2_3" stroke="#000" stroke-opacity="0" stroke-width="0">
+<path d="m80 200.13c37.756 0 68.363 30.547 68.363 68.229-37.378 0-67.75-29.939-68.353-67.101z" id="Path"/>
+</g>
+<rect fill="none" fill-rule="nonzero" height="513" stroke-width="1" transform="scale(.26704 .26652)" width="512" x="299.58" y="493.92"/>
+<g fill="url(#color-2)" fill-rule="evenodd" id="circle_sym_2_7" stroke="#000" stroke-opacity="0" stroke-width="0">
+<path d="m148.36 152.78c18.952 12.129 31.511 33.339 31.511 57.477s-12.559 45.348-31.511 57.477c-18.952-12.129-31.511-33.339-31.511-57.477 0-24.117 12.537-45.311 31.46-57.445z" id="Combined-Shape"/>
+</g>
+<rect fill="none" fill-rule="nonzero" height="513" stroke-width="1" transform="scale(.26704 .26652)" width="512" x="299.58" y="493.92"/>
+<g fill="#52d13c" fill-rule="evenodd" id="circle_sym_2_9" stroke="#000" stroke-opacity="0" stroke-width="0">
+<path d="m86.085 171.96c36.14 11.664 62.278 45.524 62.278 85.478 0 3.6974-0.22385 7.3427-0.65877 10.923l-0.0034 0.00125c-37.451-0.35468-67.7-30.765-67.7-68.226 0-9.7973 2.069-19.112 5.7948-27.534z" id="Path"/>
+</g>
+</g>
+</g>
+
+</g>
+    </g>
+  </g>
+</svg>
