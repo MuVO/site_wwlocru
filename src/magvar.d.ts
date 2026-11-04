@@ -14,6 +14,6 @@ declare module 'magvar' {
     latitude: number,
     longitude: number,
     altitudeKm?: number,
-    when?: number | Date,
+    when?: number | Date
   ): WmmField
 }

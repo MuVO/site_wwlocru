@@ -4,7 +4,10 @@ import { formatLocatorHash, parseLocatorHash } from './locatorUrl'
 describe('locator URL hashes', () => {
   it('parses search and distance hashes case-insensitively', () => {
     expect(parseLocatorHash('#ab12cd')).toEqual({ first: 'AB12CD' })
-    expect(parseLocatorHash('ab12cd:ef34gh')).toEqual({ first: 'AB12CD', second: 'EF34GH' })
+    expect(parseLocatorHash('ab12cd:ef34gh')).toEqual({
+      first: 'AB12CD',
+      second: 'EF34GH'
+    })
   })
 
   it('rejects malformed locator hashes', () => {

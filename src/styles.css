@@ -88,8 +88,10 @@ button { -webkit-tap-highlight-color: transparent; }
 .distance-units button { min-width: 38px; padding: 5px 9px; border: 0; border-radius: 999px; background: transparent; color: #aaa; font-size: 11px; cursor: pointer; }
 .distance-units button[aria-pressed="true"] { background: #1747ff; color: #fff; }
 .distance-units button:focus-visible { outline: 2px solid #91a6ff; outline-offset: 1px; }
-.magnetic-reading { display: flex; flex-wrap: wrap; gap: 5px 14px; margin: 0 3px 7px; color: #aaa; font-size: 11px; line-height: 1.4; }
+.magnetic-readings { display: grid; gap: 2px; margin: 0 3px 7px; }
+.magnetic-reading { display: flex; flex-wrap: wrap; gap: 5px 14px; margin: 0; color: #aaa; font-size: 11px; line-height: 1.4; }
 .magnetic-reading strong { color: #ededed; font-weight: 500; }
+.magnetic-reading .locator-label { color: #ddd; }
 .magnetic-reading .model-label { color: #777; }
 
 .map-section { width: 100%; }

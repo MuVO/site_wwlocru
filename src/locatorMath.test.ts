@@ -9,7 +9,7 @@ import {
   distanceBetweenLocators,
   encodeLocator,
   isValidLocator,
-  magneticReading,
+  magneticReading
 } from './locatorMath'
 
 describe('Maidenhead / QTH locator conversions', () => {
@@ -85,7 +85,11 @@ describe('great-circle distance and bearings', () => {
   it('builds a multi-stop route with segment distances', () => {
     const route = calculatePath(['MO05qe', 'MO06qe', [56.2, 61.5]])
     expect(route.path).toHaveLength(3)
-    expect(route.path.map((point) => point.name)).toEqual(['MO05QE', 'MO06QE', 'MO06SE'])
+    expect(route.path.map((point) => point.name)).toEqual([
+      'MO05QE',
+      'MO06QE',
+      'MO06SE'
+    ])
     expect(route.distance).toBeGreaterThan(0)
     expect(route.start?.azimuth).toBeDefined()
     expect(route.final?.azimuth).toBeDefined()

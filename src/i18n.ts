@@ -8,16 +8,21 @@ export function detectLocale(): Locale {
     // Storage may be unavailable in private or restricted browsing contexts.
   }
 
-  const languages = navigator.languages?.length ? navigator.languages : [navigator.language]
-  const preferred = languages.find((language) => Boolean(language))?.toLowerCase() ?? 'en'
+  const languages = navigator.languages?.length
+    ? navigator.languages
+    : [navigator.language]
+  const preferred =
+    languages.find((language) => Boolean(language))?.toLowerCase() ?? 'en'
   return preferred.startsWith('ru') ? 'ru' : 'en'
 }
 
 export const messages = {
   ru: {
     pageTitle: 'WWLOC — QTH-локатор Maidenhead и карта',
-    pageDescription: 'Найдите Maidenhead QTH-локатор на карте, определите локатор по координатам и измерьте расстояние между радиолюбительскими станциями.',
-    searchHint: 'Введите QTH-локатор, чтобы найти его на карте, или выберите точку на карте — её локатор появится в поле.',
+    pageDescription:
+      'Найдите Maidenhead QTH-локатор на карте, определите локатор по координатам и измерьте расстояние между радиолюбительскими станциями.',
+    searchHint:
+      'Введите QTH-локатор, чтобы найти его на карте, или выберите точку на карте — её локатор появится в поле.',
     searchLabel: 'QTH-локатор',
     searchButton: 'Найти на карте',
     searchMode: 'Поиск',
@@ -40,13 +45,14 @@ export const messages = {
     declination: 'Магнитное склонение',
     inclination: 'Магнитное наклонение',
     outsideModel: 'вне периода модели',
+    firstLocator: 'Первый локатор',
     aboutTitle: 'О WWLoc и QTH-локаторе',
     aboutParagraphs: [
       'Maidenhead Locator System (система IARU Locator) — компактный способ передать местоположение радиостанции в эфире. Локаторы применяют в радиосвязях, соревнованиях VHF/UHF и для расчёта расстояния между станциями.',
       'QTH — код Q, связанный с местоположением станции. В радиолюбительской речи Maidenhead locator часто называют QTH-локатором, grid locator или grid square. При этом QTH-/QRA-Locator исторически называли и более раннюю европейскую систему; здесь речь именно о современной всемирной системе Maidenhead (IARU Locator). WWL и WWLoc — употребляемые обозначения локатора, а не отдельные системы координат.',
       'Локатор состоит из пар символов: первые две буквы задают поле 20° по долготе × 10° по широте, следующие две цифры — квадрат 2° × 1°, затем идут буквы A–X (5′ × 2,5′) и цифры (30″ × 15″). Дальше пары букв и цифр повторяются, повышая точность. Длина всегда чётная; IARU рекомендует записывать все буквы заглавными, но смешанный регистр допустим. Сайт принимает до 24 символов.',
       'Шестизначный локатор задаёт область, а не конкретную точку. Размер ячейки зависит от широты: на экваторе это примерно 9 км × 5 км, а ближе к полюсам расстояние с запада на восток уменьшается.',
-      'Предложение системы подготовил Джон Моррис (G4ANB); рабочая группа IARU по VHF приняла его на встрече в Мейденхеде в 1980 году как основу всемирной системы вместо прежнего европейского QRA Locator.',
+      'Предложение системы подготовил Джон Моррис (G4ANB); рабочая группа IARU по VHF приняла его на встрече в Мейденхеде в 1980 году как основу всемирной системы вместо прежнего европейского QRA Locator.'
     ],
     shareTitle: 'Нравится? Поделитесь с друзьями!',
     feedbackTitle: 'Не хватает какой-то функции?',
@@ -61,19 +67,30 @@ export const messages = {
     backendUnavailable: 'Отправка пока не настроена. Попробуйте позже.',
     close: 'Закрыть',
     successTitle: 'Ваше сообщение\nуспешно отправлено',
-    successBody: 'Спасибо за интерес к проекту и обратную связь. Ваше сообщение не останется без внимания!',
+    successBody:
+      'Спасибо за интерес к проекту и обратную связь. Ваше сообщение не останется без внимания!',
     share: 'Поделиться: {network}',
     copied: 'Ссылка скопирована в буфер обмена.',
     copyError: 'Не удалось скопировать ссылку.',
     footer: 'QTH Locator tool by',
     design: 'Дизайн: Ирина Кравчук',
     development: 'Разработка:',
-    networks: ['ВКонтакте', 'Одноклассники', 'Телеграм', 'WhatsApp', 'Facebook', 'MAX', 'Скопировать в буфер'],
+    networks: [
+      'ВКонтакте',
+      'Одноклассники',
+      'Телеграм',
+      'WhatsApp',
+      'Facebook',
+      'MAX',
+      'Скопировать в буфер'
+    ]
   },
   en: {
     pageTitle: 'WWLOC — Maidenhead QTH Locator Map',
-    pageDescription: 'Find a Maidenhead QTH locator on the map, look up a locator from coordinates, and measure distances between amateur radio stations.',
-    searchHint: 'Enter a QTH locator to find it on the map, or select a point on the map to show its locator.',
+    pageDescription:
+      'Find a Maidenhead QTH locator on the map, look up a locator from coordinates, and measure distances between amateur radio stations.',
+    searchHint:
+      'Enter a QTH locator to find it on the map, or select a point on the map to show its locator.',
     searchLabel: 'QTH locator',
     searchButton: 'Find on map',
     searchMode: 'Search',
@@ -96,13 +113,14 @@ export const messages = {
     declination: 'Magnetic declination',
     inclination: 'Magnetic inclination',
     outsideModel: 'outside model validity',
+    firstLocator: 'First locator',
     aboutTitle: 'About WWLoc and QTH locators',
     aboutParagraphs: [
       'The Maidenhead Locator System (the IARU Locator) is a compact way for radio amateurs to exchange station locations over the air. Locators are used in QSOs, VHF/UHF contests, and to calculate distances between stations.',
       'QTH is a Q-code associated with a station’s location. In amateur-radio usage, a Maidenhead reference is often called a QTH locator, grid locator, or grid square. Historically, QTH-/QRA-Locator also referred to an earlier European system; this page describes the modern worldwide Maidenhead (IARU Locator) system. WWL and WWLoc are locator labels, not separate coordinate systems.',
       'A locator is made of character pairs: the first two letters define a 20° longitude × 10° latitude field, the next two digits a 2° × 1° square, then letters A–X (5′ × 2.5′) and digits (30″ × 15″). Letter and digit pairs repeat to provide finer precision. The length is always even; IARU recommends uppercase notation, while mixed-case input is accepted. This site accepts up to 24 characters.',
       'A six-character locator identifies an area, not an exact point. Cell dimensions vary with latitude: near the equator a subsquare is about 9 km east–west by 5 km north–south; east–west distance decreases toward the poles.',
-      'John Morris (G4ANB) developed the proposal, which the IARU VHF Working Group adopted at its 1980 Maidenhead meeting as the basis for a worldwide system, replacing the earlier Europe-focused QRA Locator.',
+      'John Morris (G4ANB) developed the proposal, which the IARU VHF Working Group adopted at its 1980 Maidenhead meeting as the basis for a worldwide system, replacing the earlier Europe-focused QRA Locator.'
     ],
     shareTitle: 'Like it? Share with friends!',
     feedbackTitle: 'Missing a feature?',
@@ -114,18 +132,28 @@ export const messages = {
     sending: 'Sending…',
     sent: 'Message sent. Thank you!',
     submitError: 'Could not send your message. Please try again later.',
-    backendUnavailable: 'Feedback submission is not configured yet. Please try again later.',
+    backendUnavailable:
+      'Feedback submission is not configured yet. Please try again later.',
     close: 'Close',
     successTitle: 'Your message was\nsent successfully',
-    successBody: 'Thank you for your interest and feedback. Your message won’t go unnoticed!',
+    successBody:
+      'Thank you for your interest and feedback. Your message won’t go unnoticed!',
     share: 'Share on {network}',
     copied: 'Link copied to clipboard.',
     copyError: 'Could not copy the link.',
     footer: 'QTH Locator tool by',
     design: 'Design: Irina Kravchuk',
     development: 'Developed by',
-    networks: ['VK', 'OK', 'Telegram', 'WhatsApp', 'Facebook', 'MAX', 'Copy to clipboard'],
-  },
+    networks: [
+      'VK',
+      'OK',
+      'Telegram',
+      'WhatsApp',
+      'Facebook',
+      'MAX',
+      'Copy to clipboard'
+    ]
+  }
 } as const
 
 export type Messages = (typeof messages)[Locale]

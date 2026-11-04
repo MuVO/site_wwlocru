@@ -37,7 +37,9 @@ function validateCoordinates([latitude, longitude]: Coordinates): void {
     throw new RangeError('Координаты должны быть конечными числами')
   }
   if (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
-    throw new RangeError('Широта должна быть от −90 до 90°, долгота — от −180 до 180°')
+    throw new RangeError(
+      'Широта должна быть от −90 до 90°, долгота — от −180 до 180°'
+    )
   }
 }
 
@@ -67,14 +69,20 @@ function componentIndex(character: string, rank: number): number {
 
 export function isValidLocator(locator: string): boolean {
   const value = locator.trim().toUpperCase()
-  if (value.length < 2 || value.length % 2 !== 0 || value.length > MAX_PAIRS * 2) return false
+  if (
+    value.length < 2 ||
+    value.length % 2 !== 0 ||
+    value.length > MAX_PAIRS * 2
+  )
+    return false
   for (let pair = 0; pair < value.length / 2; pair += 1) {
     const characters = value.slice(pair * 2, pair * 2 + 2)
-    const valid = pair === 0
-      ? /^[A-R]{2}$/.test(characters)
-      : pair % 2 === 1
-        ? /^\d{2}$/.test(characters)
-        : /^[A-X]{2}$/.test(characters)
+    const valid =
+      pair === 0
+        ? /^[A-R]{2}$/.test(characters)
+        : pair % 2 === 1
+          ? /^\d{2}$/.test(characters)
+          : /^[A-X]{2}$/.test(characters)
     if (!valid) return false
   }
   return true
@@ -122,13 +130,16 @@ export function decodeLocator(locator: string): LocatorGeometry {
     south += latitudeIndex * latStep
   }
   const [height, width] = stepForPair(ranks - 1)
-  return [[south, west], [south + height, west + width]]
+  return [
+    [south, west],
+    [south + height, west + width]
+  ]
 }
 
 export function centerOfGeometry(geometry: LocatorGeometry): Coordinates {
   return [
     (geometry[0][0] + geometry[1][0]) / 2,
-    (geometry[0][1] + geometry[1][1]) / 2,
+    (geometry[0][1] + geometry[1][1]) / 2
   ]
 }
 
@@ -140,10 +151,11 @@ export function centerOfLocator(locator: string): Coordinates {
 /** Port of the Express centre helper: accepts a locator, point, or bounds. */
 export function centerOf(
   location: string | Coordinates | LocatorGeometry,
-  precision = 3,
+  precision = 3
 ): Coordinates {
   if (typeof location === 'string') return centerOfLocator(location)
-  if (Array.isArray(location[0])) return centerOfGeometry(location as LocatorGeometry)
+  if (Array.isArray(location[0]))
+    return centerOfGeometry(location as LocatorGeometry)
   return centerOfLocator(encodeLocator(location as Coordinates, precision))
 }
 
@@ -153,14 +165,18 @@ function initialBearing(from: Coordinates, to: Coordinates): number {
   const lat2 = to[0] * toRadians
   const deltaLongitude = (to[1] - from[1]) * toRadians
   const y = Math.sin(deltaLongitude) * Math.cos(lat2)
-  const x = Math.cos(lat1) * Math.sin(lat2)
-    - Math.sin(lat1) * Math.cos(lat2) * Math.cos(deltaLongitude)
+  const x =
+    Math.cos(lat1) * Math.sin(lat2) -
+    Math.sin(lat1) * Math.cos(lat2) * Math.cos(deltaLongitude)
   if (Math.abs(x) < 1e-15 && Math.abs(y) < 1e-15) return 0
-  return (Math.atan2(y, x) * 180 / Math.PI + 360) % 360
+  return ((Math.atan2(y, x) * 180) / Math.PI + 360) % 360
 }
 
 /** Great-circle distance (metres) and forward/reverse true bearings. */
-export function distanceBetween(from: Coordinates, to: Coordinates): DistanceResult {
+export function distanceBetween(
+  from: Coordinates,
+  to: Coordinates
+): DistanceResult {
   validateCoordinates(from)
   validateCoordinates(to)
   const toRadians = Math.PI / 180
@@ -168,29 +184,44 @@ export function distanceBetween(from: Coordinates, to: Coordinates): DistanceRes
   const lat2 = to[0] * toRadians
   const deltaLat = (to[0] - from[0]) * toRadians
   const deltaLon = (to[1] - from[1]) * toRadians
-  const haversine = Math.sin(deltaLat / 2) ** 2
-    + Math.cos(lat1) * Math.cos(lat2) * Math.sin(deltaLon / 2) ** 2
-  const arc = 2 * Math.atan2(Math.sqrt(Math.min(1, haversine)), Math.sqrt(Math.max(0, 1 - haversine)))
+  const haversine =
+    Math.sin(deltaLat / 2) ** 2 +
+    Math.cos(lat1) * Math.cos(lat2) * Math.sin(deltaLon / 2) ** 2
+  const arc =
+    2 *
+    Math.atan2(
+      Math.sqrt(Math.min(1, haversine)),
+      Math.sqrt(Math.max(0, 1 - haversine))
+    )
   return {
     point: { start: from, final: to },
     distance: arc * EARTH_RADIUS_METERS,
     azimuth: {
       start: initialBearing(from, to),
-      final: initialBearing(to, from),
-    },
+      final: initialBearing(to, from)
+    }
   }
 }
 
-export function distanceBetweenLocators(from: string, to: string): DistanceResult {
+export function distanceBetweenLocators(
+  from: string,
+  to: string
+): DistanceResult {
   return distanceBetween(centerOfLocator(from), centerOfLocator(to))
 }
 
 /** Build the multi-stop path returned by the old /calc/distance route. */
-export function calculatePath(locations: Array<string | Coordinates>, precision = 3): PathResult {
+export function calculatePath(
+  locations: Array<string | Coordinates>,
+  precision = 3
+): PathResult {
   const path = locations.map((location): PathPoint => {
-    const name = typeof location === 'string'
-      ? (isValidLocator(location) ? location.toUpperCase() : encodeLocator(parseCoordinatePair(location), precision))
-      : encodeLocator(location, precision)
+    const name =
+      typeof location === 'string'
+        ? isValidLocator(location)
+          ? location.toUpperCase()
+          : encodeLocator(parseCoordinatePair(location), precision)
+        : encodeLocator(location, precision)
     const geometry = decodeLocator(name)
     return { name, geometry, center: centerOfGeometry(geometry) }
   })
@@ -200,7 +231,8 @@ export function calculatePath(locations: Array<string | Coordinates>, precision 
   result.path = path
   for (let index = 1; index < path.length; index += 1) {
     const segment = distanceBetween(path[index - 1].center, path[index].center)
-    if (index === 1) result.start = { point: path[0].center, azimuth: segment.azimuth.start }
+    if (index === 1)
+      result.start = { point: path[0].center, azimuth: segment.azimuth.start }
     result.final = { point: path[index].center, azimuth: segment.azimuth.final }
     result.distance += segment.distance
   }
@@ -227,19 +259,24 @@ function dateToDecimalYear(date: Date): number {
 export function magneticReading(
   coordinates: Coordinates,
   date: Date = new Date(),
-  altitudeKm = 0,
+  altitudeKm = 0
 ): MagneticReading {
   validateCoordinates(coordinates)
   if (!Number.isFinite(altitudeKm) || altitudeKm < -1 || altitudeKm > 850) {
     throw new RangeError('Высота для WMM должна быть от −1 до 850 км')
   }
   const decimalYear = dateToDecimalYear(date)
-  const field = magneticField(coordinates[0], coordinates[1], altitudeKm, decimalYear)
+  const field = magneticField(
+    coordinates[0],
+    coordinates[1],
+    altitudeKm,
+    decimalYear
+  )
   return {
     declination: field.declination,
     inclination: field.inclination,
     decimalYear: field.decimalYear,
     model: 'WMM2025',
-    valid: decimalYear >= MODEL_START && decimalYear < MODEL_END,
+    valid: decimalYear >= MODEL_START && decimalYear < MODEL_END
   }
 }
