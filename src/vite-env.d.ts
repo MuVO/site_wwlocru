@@ -1,6 +1,7 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
+  readonly VITE_SITE_DOMAIN: string
   readonly VITE_FEEDBACK_API_URL?: string
   readonly VITE_YANDEX_MAPS_API_KEY?: string
 }

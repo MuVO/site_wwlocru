@@ -35,6 +35,7 @@ jobs:
         env:
           VITE_FEEDBACK_API_URL: ${{ vars.VITE_FEEDBACK_API_URL }}
           VITE_YANDEX_MAPS_API_KEY: ${{ vars.VITE_YANDEX_MAPS_API_KEY }}
+          VITE_SITE_DOMAIN: ${{ vars.VITE_SITE_DOMAIN }}
         run: npm run build
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
