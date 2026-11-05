@@ -60,7 +60,13 @@ function SocialIcon({ network }: { network: SocialNetwork }) {
       </svg>
     )
   if (network === 'max')
-    return <img className="max-social-icon" src="/assets/icons/max-logo.svg" alt="" />
+    return (
+      <img
+        className="max-social-icon"
+        src="/assets/icons/max-logo.svg"
+        alt=""
+      />
+    )
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <rect x="5" y="8" width="14" height="13" rx="2" />
