@@ -73,7 +73,7 @@ button { -webkit-tap-highlight-color: transparent; }
   transition: filter .16s ease;
 }
 .search-form button:hover, .send-button:hover { filter: brightness(1.16); }
-.search-form button:focus-visible, .send-button:focus-visible, .modal-close:focus-visible, .search-mode-menu button:focus-visible { outline: 2px solid white; outline-offset: -4px; }
+.search-form button:focus-visible, .send-button:focus-visible, .search-mode-menu button:focus-visible { outline: 2px solid white; outline-offset: -4px; }
 .search-form svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
 .search-form .mode-menu-toggle { width: 40px; flex-basis: 40px; border-left: 1px solid rgb(255 255 255 / 24%); background: linear-gradient(135deg, #0750f5, #0836da); }
 .search-form .mode-menu-toggle svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
@@ -193,12 +193,6 @@ button { -webkit-tap-highlight-color: transparent; }
 .credit-badge img { display: block; width: 1.125rem; height: 1.125rem; object-fit: contain; opacity: .82; }
 .credit-name { color: rgb(229 231 235 / 82%); font-weight: 500; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
-
-.modal-backdrop { position: fixed; z-index: 10; inset: 0; display: grid; padding: 20px; place-items: center; background: rgb(0 0 0 / 72%); }
-.success-modal { position: relative; width: min(100%, 360px); min-height: 280px; padding: 72px 26px 30px; border-radius: 4px; background: #1c1c1c; box-shadow: 0 20px 70px rgb(0 0 0 / 45%); }
-.success-modal h2 { margin: 0 0 16px; font-size: 20px; line-height: 1.35; text-align: center; }
-.success-modal p { margin: 0; color: #eee; font-size: 14px; line-height: 1.48; }
-.modal-close { position: absolute; top: 14px; right: 17px; border: 0; background: transparent; color: white; font-size: 30px; line-height: 1; cursor: pointer; }
 
 @media (min-width: 1000px) {
   .app-shell { padding-top: 34px; }
