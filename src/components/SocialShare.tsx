@@ -69,8 +69,8 @@ function SocialIcon({ network }: { network: SocialNetwork }) {
     )
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
-      <rect x="5" y="8" width="14" height="13" rx="2" />
-      <path d="M8 8V5.5A2.5 2.5 0 0 1 10.5 3h3A2.5 2.5 0 0 1 16 5.5V8M9 13h6M9 16h6" />
+      <rect x="8" y="8" width="12" height="13" rx="2" />
+      <path d="M16 8V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h2" />
     </svg>
   )
 }
