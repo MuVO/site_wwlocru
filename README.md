@@ -56,7 +56,7 @@ WMM2025 опубликована NOAA/NCEI совместно с BGS и пред
 - [IARU Region 1 VHF Handbook — раздел The Locator System](https://www.iaru-r1.org/wp-content/uploads/2026/02/VHF_Handbook_V10_03_final.pdf)
 - [История системы локаторов, публикация на QRZ.ru (PDF)](https://www.qrz.ru/vhf/qth_h.pdf)
 - [ARRL: Grid Squares](https://www.arrl.org/grid-squares)
-- [NOAA/NCEI: World Magnetic Model](https://www.ncei.noaa.gov/products/world-magnetic-model)
+- [NOAA/NCEI and BGS: World Magnetic Model (WMM2025)](https://www.ncei.noaa.gov/products/world-magnetic-model)
 
 В тестах проверяются опубликованные NOAA/NCEI контрольные значения WMM2025 и базовые расчёты локаторов и расстояний.
 

@@ -79,7 +79,14 @@ function MagneticReadingRow({
         </strong>
       </span>
       <span className="model-label">
-        {reading.model}
+        <a
+          href="https://www.ncei.noaa.gov/products/world-magnetic-model"
+          target="_blank"
+          rel="noreferrer"
+          title="NOAA/NCEI and BGS World Magnetic Model"
+        >
+          {reading.model}
+        </a>
         {reading.valid ? '' : ` · ${t.outsideModel}`}
       </span>
     </p>
