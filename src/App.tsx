@@ -314,7 +314,8 @@ function App() {
           <div className="footer-details">
             <span>
               {t.footer} <a href="mailto:r8abk@autoradio.club">R8ABK</a>{' '}
-              <span aria-hidden="true">·</span> © 2016–{new Date().getFullYear()}
+              <span aria-hidden="true">·</span> © 2016–
+              {new Date().getFullYear()}
             </span>
             <span>{t.design}</span>
           </div>
