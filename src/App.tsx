@@ -326,7 +326,7 @@ function App() {
             aria-label={`${t.development} Let's make IT — ${locale === 'ru' ? 'открыть сайт' : 'visit website'}`}
           >
             <img
-              src="/assets/lmi-mark.svg"
+              src="/assets/icons/lmi-mark.svg"
               alt=""
               width="18"
               height="18"
