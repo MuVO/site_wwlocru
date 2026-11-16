@@ -9,7 +9,7 @@ import {
   magneticReading,
   type MagneticReading
 } from '../locatorMath'
-import { formatLocatorPath } from '../locatorUrl'
+import { formatLocatorUrl } from '../locatorUrl'
 import {
   combinedRouteBounds,
   createDistanceRoute,
@@ -113,7 +113,7 @@ export function useLocatorActions(options: UseLocatorActionsOptions) {
           window.history.replaceState(
             null,
             '',
-            formatLocatorPath(locale.current, code)
+            formatLocatorUrl(locale.current, code)
           )
       } catch {
         setError(messages[locale.current].invalidLocator)
@@ -160,7 +160,7 @@ export function useLocatorActions(options: UseLocatorActionsOptions) {
       window.history.replaceState(
         null,
         '',
-        formatLocatorPath(locale.current, route.first, route.second)
+        formatLocatorUrl(locale.current, route.first, route.second)
       )
 
       if (!fitMap) return

@@ -2,7 +2,8 @@ import { useEffect } from 'react'
 import type { Locale, Messages } from '../i18n'
 import {
   formatHomePath,
-  formatLocatorPath,
+  formatLocatorUrl,
+  parseLocatorQuery,
   parseLocatorPath
 } from '../locatorUrl'
 
@@ -23,7 +24,8 @@ function setLink(rel: string, href: string, hreflang?: string) {
 export function usePageLocale(
   locale: Locale,
   text: Messages,
-  pathname: string
+  pathname: string,
+  search: string
 ): void {
   useEffect(() => {
     document.documentElement.lang = locale
@@ -50,10 +52,10 @@ export function usePageLocale(
       .querySelector('meta[name="twitter:description"]')
       ?.setAttribute('content', text.pageDescription)
 
-    const route = parseLocatorPath(pathname)
+    const route = parseLocatorQuery(search) ?? parseLocatorPath(pathname)
     const pathFor = (language: Locale) =>
       route
-        ? formatLocatorPath(language, route.first, route.second)
+        ? formatLocatorUrl(language, route.first, route.second)
         : formatHomePath(language)
     const origin = window.location.origin
     const canonical = `${origin}${pathFor(locale)}`
@@ -64,5 +66,5 @@ export function usePageLocale(
     document
       .querySelector('meta[property="og:url"]')
       ?.setAttribute('content', canonical)
-  }, [locale, pathname, text.pageDescription, text.pageTitle])
+  }, [locale, pathname, search, text.pageDescription, text.pageTitle])
 }

@@ -10,7 +10,8 @@ import {
 import {
   formatHomePath,
   formatLocatorHash,
-  formatLocatorPath,
+  formatLocatorUrl,
+  parseLocatorQuery,
   parseLocatorHash,
   parseLocatorPath
 } from './locatorUrl'
@@ -53,7 +54,9 @@ function App() {
   const [locator, setLocator] = useState('')
   const locatorRef = useRef(locator)
   locatorRef.current = locator
-  const initialPathRoute = parseLocatorPath(window.location.pathname)
+  const initialPathRoute =
+    parseLocatorQuery(window.location.search) ??
+    parseLocatorPath(window.location.pathname)
   const initialHashRef = useRef(
     initialPathRoute
       ? formatLocatorHash(initialPathRoute.first, initialPathRoute.second)
@@ -88,7 +91,7 @@ function App() {
   )
   const feedback = useFeedback(locale)
 
-  usePageLocale(locale, t, window.location.pathname)
+  usePageLocale(locale, t, window.location.pathname, window.location.search)
 
   const { updateMap, measureDistance } = useLocatorActions({
     locale: localeRef,
@@ -240,7 +243,7 @@ function App() {
       null,
       '',
       route
-        ? formatLocatorPath(nextLocale, route.first, route.second)
+        ? formatLocatorUrl(nextLocale, route.first, route.second)
         : formatHomePath(nextLocale)
     )
     setLocale(nextLocale)

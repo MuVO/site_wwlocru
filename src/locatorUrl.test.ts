@@ -3,9 +3,11 @@ import {
   formatHomePath,
   formatLocatorHash,
   formatLocatorPath,
+  formatLocatorUrl,
   localeFromPath,
   parseLocatorHash,
-  parseLocatorPath
+  parseLocatorPath,
+  parseLocatorQuery
 } from './locatorUrl'
 
 describe('locator URL hashes', () => {
@@ -57,5 +59,41 @@ describe('pathname routes', () => {
   it('uses Russian unless the URL explicitly selects English', () => {
     expect(localeFromPath('/locator/MO05QE')).toBe('ru')
     expect(localeFromPath('/en/distance/MO05QE:KO85BC')).toBe('en')
+  })
+})
+
+describe('query-string routes', () => {
+  it('parses localized locator and distance parameters', () => {
+    expect(parseLocatorQuery('?locator=mo05qe')).toEqual({ first: 'MO05QE' })
+    expect(parseLocatorQuery('?from=mo05qe&to=ko85bc')).toEqual({
+      first: 'MO05QE',
+      second: 'KO85BC'
+    })
+    expect(
+      parseLocatorQuery('?from=MO05QE&to=KO85BC&utm_source=share')
+    ).toEqual({
+      first: 'MO05QE',
+      second: 'KO85BC'
+    })
+  })
+
+  it('rejects incomplete, invalid, or duplicate route parameters', () => {
+    expect(parseLocatorQuery('?locator=invalid')).toBeNull()
+    expect(parseLocatorQuery('?from=MO05QE')).toBeNull()
+    expect(
+      parseLocatorQuery('?locator=MO05QE&from=KO85BC&to=KO85BC')
+    ).toBeNull()
+    expect(parseLocatorQuery('?locator=MO05QE&locator=KO85BC')).toBeNull()
+  })
+
+  it('formats query routes under the localized landing pages', () => {
+    expect(formatLocatorUrl('ru', 'mo05qe')).toBe('/?locator=MO05QE')
+    expect(formatLocatorUrl('en', 'mo05qe')).toBe('/en/?locator=MO05QE')
+    expect(formatLocatorUrl('ru', 'mo05qe', 'ko85bc')).toBe(
+      '/?from=MO05QE&to=KO85BC'
+    )
+    expect(formatLocatorUrl('en', 'mo05qe', 'ko85bc')).toBe(
+      '/en/?from=MO05QE&to=KO85BC'
+    )
   })
 })

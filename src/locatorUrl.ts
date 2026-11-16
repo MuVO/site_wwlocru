@@ -32,6 +32,35 @@ export function localeFromPath(pathname: string): 'ru' | 'en' {
   return /^\/en(?:\/|$)/i.test(pathname) ? 'en' : 'ru'
 }
 
+export function parseLocatorQuery(search: string): LocatorPath | null {
+  const params = new URLSearchParams(search)
+  const locatorValues = params.getAll('locator')
+  const fromValues = params.getAll('from')
+  const toValues = params.getAll('to')
+
+  if (
+    locatorValues.length === 1 &&
+    fromValues.length === 0 &&
+    toValues.length === 0 &&
+    isValidLocator(locatorValues[0])
+  ) {
+    return { first: locatorValues[0].toUpperCase() }
+  }
+  if (
+    locatorValues.length === 0 &&
+    fromValues.length === 1 &&
+    toValues.length === 1 &&
+    isValidLocator(fromValues[0]) &&
+    isValidLocator(toValues[0])
+  ) {
+    return {
+      first: fromValues[0].toUpperCase(),
+      second: toValues[0].toUpperCase()
+    }
+  }
+  return null
+}
+
 export function formatLocatorPath(
   locale: 'ru' | 'en',
   first: string,
@@ -41,6 +70,17 @@ export function formatLocatorPath(
   return second
     ? `${prefix}/distance/${first.toUpperCase()}:${second.toUpperCase()}`
     : `${prefix}/locator/${first.toUpperCase()}`
+}
+
+export function formatLocatorUrl(
+  locale: 'ru' | 'en',
+  first: string,
+  second?: string
+): string {
+  const home = formatHomePath(locale)
+  return second
+    ? `${home}?from=${first.toUpperCase()}&to=${second.toUpperCase()}`
+    : `${home}?locator=${first.toUpperCase()}`
 }
 
 export function formatHomePath(locale: 'ru' | 'en'): string {
