@@ -203,6 +203,88 @@ export function distanceBetween(
   }
 }
 
+/** Sample the shorter great-circle arc between two points on a spherical Earth. */
+export function greatCirclePath(
+  from: Coordinates,
+  to: Coordinates,
+  segments = 64
+): Coordinates[] {
+  validateCoordinates(from)
+  validateCoordinates(to)
+  const count = Math.max(1, Math.trunc(segments))
+  const radians = Math.PI / 180
+  const toVector = ([latitude, longitude]: Coordinates): [
+    number,
+    number,
+    number
+  ] => {
+    const lat = latitude * radians
+    const lon = longitude * radians
+    return [
+      Math.cos(lat) * Math.cos(lon),
+      Math.cos(lat) * Math.sin(lon),
+      Math.sin(lat)
+    ]
+  }
+  const start = toVector(from)
+  const end = toVector(to)
+  const dot = Math.max(
+    -1,
+    Math.min(1, start[0] * end[0] + start[1] * end[1] + start[2] * end[2])
+  )
+  const angle = Math.acos(dot)
+  if (angle < 1e-12) return [from, to]
+
+  const points: Coordinates[] = []
+  const sine = Math.sin(angle)
+  let perpendicular: [number, number, number] | null = null
+  if (Math.abs(sine) < 1e-10) {
+    const reference: [number, number, number] =
+      Math.abs(start[0]) < 0.9 ? [1, 0, 0] : [0, 1, 0]
+    const cross: [number, number, number] = [
+      start[1] * reference[2] - start[2] * reference[1],
+      start[2] * reference[0] - start[0] * reference[2],
+      start[0] * reference[1] - start[1] * reference[0]
+    ]
+    const length = Math.hypot(...cross)
+    perpendicular = cross.map((value) => value / length) as [
+      number,
+      number,
+      number
+    ]
+  }
+
+  for (let index = 0; index <= count; index += 1) {
+    const fraction = index / count
+    let vector: [number, number, number]
+    if (perpendicular) {
+      vector = [
+        start[0] * Math.cos(Math.PI * fraction) +
+          perpendicular[0] * Math.sin(Math.PI * fraction),
+        start[1] * Math.cos(Math.PI * fraction) +
+          perpendicular[1] * Math.sin(Math.PI * fraction),
+        start[2] * Math.cos(Math.PI * fraction) +
+          perpendicular[2] * Math.sin(Math.PI * fraction)
+      ]
+    } else {
+      const startScale = Math.sin((1 - fraction) * angle) / sine
+      const endScale = Math.sin(fraction * angle) / sine
+      vector = [
+        start[0] * startScale + end[0] * endScale,
+        start[1] * startScale + end[1] * endScale,
+        start[2] * startScale + end[2] * endScale
+      ]
+    }
+    points.push([
+      Math.atan2(vector[2], Math.hypot(vector[0], vector[1])) / radians,
+      Math.atan2(vector[1], vector[0]) / radians
+    ])
+  }
+  points[0] = from
+  points[points.length - 1] = to
+  return points
+}
+
 /** Convert a true bearing to a magnetic bearing (east declination is positive). */
 export function magneticBearing(
   trueBearing: number,

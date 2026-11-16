@@ -12,6 +12,9 @@ describe('locator distance routes', () => {
     expect(route?.azimuth.start).toBeLessThan(360)
     expect(route?.azimuth.final).toBeGreaterThanOrEqual(0)
     expect(route?.azimuth.final).toBeLessThan(360)
+    expect(route?.path.length).toBeGreaterThan(2)
+    expect(route?.path[0]).toEqual(route?.firstCenter)
+    expect(route?.path.at(-1)).toEqual(route?.secondCenter)
   })
 
   it('returns null when either locator is invalid', () => {

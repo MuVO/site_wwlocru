@@ -62,7 +62,7 @@ export function useDistanceOverlays(options: UseDistanceOverlaysOptions): void {
       return
     }
 
-    const { firstBounds, secondBounds, firstCenter, secondCenter } = route
+    const { firstBounds, secondBounds, path } = route
     if (yandexReady && yandexMap.current && window.ymaps) {
       setYandexRectangle(
         yandexMap.current,
@@ -87,10 +87,7 @@ export function useDistanceOverlays(options: UseDistanceOverlaysOptions): void {
         }
       )
 
-      const coordinates = [firstCenter, secondCenter].map(([lat, lng]) => [
-        lat,
-        lng
-      ])
+      const coordinates = path.map(([lat, lng]) => [lat, lng])
       if (!yandexRouteLine.current) {
         yandexRouteLine.current = new window.ymaps.Polyline(
           coordinates,
@@ -126,12 +123,13 @@ export function useDistanceOverlays(options: UseDistanceOverlaysOptions): void {
       } else osmSecondRectangle.current.setBounds(secondCell)
 
       if (!osmRouteLine.current) {
-        osmRouteLine.current = L.polyline([firstCenter, secondCenter], {
+        osmRouteLine.current = L.polyline(path, {
           color: '#ef3340',
           weight: 3,
-          opacity: 0.95
+          opacity: 0.95,
+          smoothFactor: 0.1
         }).addTo(openStreetMap.current)
-      } else osmRouteLine.current.setLatLngs([firstCenter, secondCenter])
+      } else osmRouteLine.current.setLatLngs(path)
     }
   }, [
     route,

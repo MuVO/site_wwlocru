@@ -8,6 +8,7 @@ import {
   distanceBetween,
   distanceBetweenLocators,
   encodeLocator,
+  greatCirclePath,
   isValidLocator,
   magneticBearing,
   magneticReading
@@ -86,6 +87,15 @@ describe('great-circle distance and bearings', () => {
   it('converts true bearings to east-positive magnetic bearings', () => {
     expect(magneticBearing(10, 14.2)).toBeCloseTo(355.8, 8)
     expect(magneticBearing(350, -15)).toBeCloseTo(5, 8)
+  })
+
+  it('samples intermediate points along the great-circle arc', () => {
+    const path = greatCirclePath([0, 0], [60, 60], 2)
+    expect(path).toHaveLength(3)
+    expect(path[0]).toEqual([0, 0])
+    expect(path[2]).toEqual([60, 60])
+    expect(path[1][0]).not.toBeCloseTo(30, 0)
+    expect(path[1][1]).not.toBeCloseTo(30, 0)
   })
 
   it('builds a multi-stop route with segment distances', () => {

@@ -2,6 +2,7 @@ import {
   centerOfGeometry,
   decodeLocator,
   distanceBetween,
+  greatCirclePath,
   isValidLocator,
   type DistanceResult,
   type Coordinates,
@@ -18,6 +19,7 @@ export interface DistanceRoute {
   secondCenter: Coordinates
   distanceMeters: number
   azimuth: DistanceResult['azimuth']
+  path: Coordinates[]
 }
 
 export function createDistanceRoute(
@@ -33,6 +35,7 @@ export function createDistanceRoute(
   const firstCenter = centerOfGeometry(firstBounds)
   const secondCenter = centerOfGeometry(secondBounds)
   const distance = distanceBetween(firstCenter, secondCenter)
+  const arcDegrees = (distance.distance / 6_371_000) * (180 / Math.PI)
 
   return {
     first,
@@ -42,7 +45,12 @@ export function createDistanceRoute(
     firstCenter,
     secondCenter,
     distanceMeters: distance.distance,
-    azimuth: distance.azimuth
+    azimuth: distance.azimuth,
+    path: greatCirclePath(
+      firstCenter,
+      secondCenter,
+      Math.max(2, Math.ceil(arcDegrees / 0.1))
+    )
   }
 }
 
