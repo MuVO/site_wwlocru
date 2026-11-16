@@ -142,7 +142,8 @@ function App() {
     const initialRoute = parseLocatorHash(initialHashRef.current)
     if (initialRoute?.second)
       measureDistance(initialRoute.first, initialRoute.second)
-    else if (isValidLocator(locatorRef.current)) updateMap(locatorRef.current)
+    else if (isValidLocator(locatorRef.current))
+      updateMap(locatorRef.current, true, false)
   }
 
   useDistanceOverlays({
