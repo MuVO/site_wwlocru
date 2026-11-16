@@ -9,6 +9,7 @@ import {
   distanceBetweenLocators,
   encodeLocator,
   isValidLocator,
+  magneticBearing,
   magneticReading
 } from './locatorMath'
 
@@ -80,6 +81,11 @@ describe('great-circle distance and bearings', () => {
     expect(same.distance).toBe(0)
     expect(same.azimuth.start).toBe(0)
     expect(distanceBetweenLocators('MO05qe', 'MO05qe').distance).toBe(0)
+  })
+
+  it('converts true bearings to east-positive magnetic bearings', () => {
+    expect(magneticBearing(10, 14.2)).toBeCloseTo(355.8, 8)
+    expect(magneticBearing(350, -15)).toBeCloseTo(5, 8)
   })
 
   it('builds a multi-stop route with segment distances', () => {

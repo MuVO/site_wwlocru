@@ -3,6 +3,7 @@ import {
   decodeLocator,
   distanceBetween,
   isValidLocator,
+  type DistanceResult,
   type Coordinates,
   type LocatorGeometry
 } from './locatorMath'
@@ -16,6 +17,7 @@ export interface DistanceRoute {
   firstCenter: Coordinates
   secondCenter: Coordinates
   distanceMeters: number
+  azimuth: DistanceResult['azimuth']
 }
 
 export function createDistanceRoute(
@@ -30,6 +32,7 @@ export function createDistanceRoute(
   const secondBounds = decodeLocator(second)
   const firstCenter = centerOfGeometry(firstBounds)
   const secondCenter = centerOfGeometry(secondBounds)
+  const distance = distanceBetween(firstCenter, secondCenter)
 
   return {
     first,
@@ -38,7 +41,8 @@ export function createDistanceRoute(
     secondBounds,
     firstCenter,
     secondCenter,
-    distanceMeters: distanceBetween(firstCenter, secondCenter).distance
+    distanceMeters: distance.distance,
+    azimuth: distance.azimuth
   }
 }
 

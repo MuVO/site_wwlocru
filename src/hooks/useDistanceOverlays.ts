@@ -80,9 +80,9 @@ export function useDistanceOverlays(options: UseDistanceOverlaysOptions): void {
         yandexSecondRectangle,
         secondBounds,
         {
-          fillColor: '#ff9c2730',
+          fillColor: '#ef334033',
           fillOpacity: 0.2,
-          strokeColor: '#ff9c27',
+          strokeColor: '#ef3340',
           strokeWidth: 2
         }
       )
@@ -96,7 +96,7 @@ export function useDistanceOverlays(options: UseDistanceOverlaysOptions): void {
           coordinates,
           {},
           {
-            strokeColor: '#ff9c27',
+            strokeColor: '#ef3340',
             strokeWidth: 3,
             strokeOpacity: 0.95
           }
@@ -118,16 +118,16 @@ export function useDistanceOverlays(options: UseDistanceOverlaysOptions): void {
 
       if (!osmSecondRectangle.current) {
         osmSecondRectangle.current = L.rectangle(secondCell, {
-          color: '#ff9c27',
+          color: '#ef3340',
           weight: 2,
-          fillColor: '#ff9c27',
+          fillColor: '#ef3340',
           fillOpacity: 0.18
         }).addTo(openStreetMap.current)
       } else osmSecondRectangle.current.setBounds(secondCell)
 
       if (!osmRouteLine.current) {
         osmRouteLine.current = L.polyline([firstCenter, secondCenter], {
-          color: '#ff9c27',
+          color: '#ef3340',
           weight: 3,
           opacity: 0.95
         }).addTo(openStreetMap.current)

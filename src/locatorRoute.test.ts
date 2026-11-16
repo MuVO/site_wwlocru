@@ -8,6 +8,10 @@ describe('locator distance routes', () => {
     expect(route?.first).toBe('MO05QE')
     expect(route?.second).toBe('KO85BC')
     expect(route?.distanceMeters).toBeGreaterThan(0)
+    expect(route?.azimuth.start).toBeGreaterThanOrEqual(0)
+    expect(route?.azimuth.start).toBeLessThan(360)
+    expect(route?.azimuth.final).toBeGreaterThanOrEqual(0)
+    expect(route?.azimuth.final).toBeLessThan(360)
   })
 
   it('returns null when either locator is invalid', () => {

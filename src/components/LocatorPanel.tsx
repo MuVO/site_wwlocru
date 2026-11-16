@@ -1,6 +1,9 @@
 import type { FormEventHandler } from 'react'
 import type { Locale, Messages } from '../i18n'
-import type { MagneticReading } from '../locatorMath'
+import {
+  magneticBearing as toMagneticBearing,
+  type MagneticReading
+} from '../locatorMath'
 import type { DistanceRoute } from '../locatorRoute'
 
 export type SearchMode = 'search' | 'distance'
@@ -18,6 +21,7 @@ type LocatorPanelProps = {
   magnetic: MagneticReading | null
   secondMagnetic: MagneticReading | null
   error: string
+  locationNotice: string
   onSubmit: FormEventHandler<HTMLFormElement>
   onLocatorChange: (value: string) => void
   onSecondLocatorChange: (value: string) => void
@@ -47,23 +51,14 @@ export function RulerIcon() {
 }
 
 function MagneticReadingRow({
-  label,
-  locator,
   reading,
   t
 }: {
-  label?: string
-  locator?: string
   reading: MagneticReading
   t: Messages
 }) {
   return (
     <p className="magnetic-reading">
-      {label && locator && (
-        <span className="locator-label">
-          {label}: <strong>{locator}</strong>
-        </span>
-      )}
       <span>
         {t.declination}:{' '}
         <strong>
@@ -93,6 +88,58 @@ function MagneticReadingRow({
   )
 }
 
+function MagneticReadingColumn({
+  title,
+  locator,
+  directionLabel,
+  trueBearing,
+  reading,
+  t
+}: {
+  title: string
+  locator: string
+  directionLabel: string
+  trueBearing: number
+  reading: MagneticReading
+  t: Messages
+}) {
+  return (
+    <section className="magnetic-reading-column">
+      <h3>
+        {title}: <strong>{locator}</strong>
+      </h3>
+      <dl>
+        <div>
+          <dt>{directionLabel}</dt>
+          <dd>
+            <span>
+              {trueBearing.toFixed(1)}° {t.trueBearing}
+            </span>
+            <span>
+              {toMagneticBearing(trueBearing, reading.declination).toFixed(1)}°{' '}
+              {t.magneticBearing}
+            </span>
+          </dd>
+        </div>
+        <div>
+          <dt>{t.declination}</dt>
+          <dd>
+            {reading.declination > 0 ? '+' : ''}
+            {reading.declination.toFixed(2)}°
+          </dd>
+        </div>
+        <div>
+          <dt>{t.inclination}</dt>
+          <dd>
+            {reading.inclination > 0 ? '+' : ''}
+            {reading.inclination.toFixed(2)}°
+          </dd>
+        </div>
+      </dl>
+    </section>
+  )
+}
+
 export function LocatorPanel(props: LocatorPanelProps) {
   const {
     t,
@@ -106,6 +153,7 @@ export function LocatorPanel(props: LocatorPanelProps) {
     magnetic,
     secondMagnetic,
     error,
+    locationNotice,
     onSubmit,
     onLocatorChange,
     onSecondLocatorChange,
@@ -119,6 +167,11 @@ export function LocatorPanel(props: LocatorPanelProps) {
   return (
     <section className="locator-section" aria-label={t.searchLabel}>
       <p className="locator-hint">{t.searchHint}</p>
+      {locationNotice && (
+        <p className="locator-hint" role="status">
+          {locationNotice}
+        </p>
+      )}
       <form className="search-form" onSubmit={onSubmit}>
         <div className="search-input-rows">
           <div
@@ -240,24 +293,42 @@ export function LocatorPanel(props: LocatorPanelProps) {
           </div>
         </div>
       )}
-      {magnetic && (
-        <div className="magnetic-readings" aria-live="polite">
-          <MagneticReadingRow
-            label={distanceRoute ? t.firstLocator : undefined}
-            locator={distanceRoute?.first}
+      {distanceRoute && magnetic && secondMagnetic ? (
+        <div className="magnetic-readings distance-magnetic-readings">
+          <MagneticReadingColumn
+            title={t.firstLocator}
+            locator={distanceRoute.first}
+            directionLabel={t.bearingToSecond}
+            trueBearing={distanceRoute.azimuth.start}
             reading={magnetic}
             t={t}
           />
-          {distanceRoute && secondMagnetic && (
-            <MagneticReadingRow
-              label={t.secondLocator}
-              locator={distanceRoute.second}
-              reading={secondMagnetic}
-              t={t}
-            />
-          )}
+          <MagneticReadingColumn
+            title={t.secondLocator}
+            locator={distanceRoute.second}
+            directionLabel={t.bearingToFirst}
+            trueBearing={distanceRoute.azimuth.final}
+            reading={secondMagnetic}
+            t={t}
+          />
+          <a
+            className="distance-model-source"
+            href="https://www.ncei.noaa.gov/products/world-magnetic-model"
+            target="_blank"
+            rel="noreferrer"
+            title="NOAA/NCEI and BGS World Magnetic Model"
+          >
+            {magnetic.model}
+            {magnetic.valid && secondMagnetic.valid
+              ? ''
+              : ` · ${t.outsideModel}`}
+          </a>
         </div>
-      )}
+      ) : magnetic ? (
+        <div className="magnetic-readings" aria-live="polite">
+          <MagneticReadingRow reading={magnetic} t={t} />
+        </div>
+      ) : null}
     </section>
   )
 }

@@ -203,6 +203,14 @@ export function distanceBetween(
   }
 }
 
+/** Convert a true bearing to a magnetic bearing (east declination is positive). */
+export function magneticBearing(
+  trueBearing: number,
+  declination: number
+): number {
+  return (((trueBearing - declination) % 360) + 360) % 360
+}
+
 export function distanceBetweenLocators(
   from: string,
   to: string
