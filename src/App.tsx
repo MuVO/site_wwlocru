@@ -129,7 +129,14 @@ function App() {
   })
 
   function handleMapClick(coordinates: [number, number]) {
-    const next = encodeLocator(coordinates)
+    const referenceLocator =
+      searchModeRef.current === 'distance' && isValidLocator(secondLocator)
+        ? secondLocator
+        : locatorRef.current
+    const precision = isValidLocator(referenceLocator)
+      ? referenceLocator.length / 2
+      : 3
+    const next = encodeLocator(coordinates, precision)
     locatorTouchedRef.current = true
     setLocationNotice(null)
     if (searchModeRef.current === 'distance') {

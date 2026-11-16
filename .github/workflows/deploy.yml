@@ -31,6 +31,14 @@ jobs:
         run: npm run lint
       - name: Test
         run: npm test
+      - name: Check Yandex Maps API key
+        env:
+          VITE_YANDEX_MAPS_API_KEY: ${{ vars.VITE_YANDEX_MAPS_API_KEY }}
+        run: |
+          if [ -z "$VITE_YANDEX_MAPS_API_KEY" ]; then
+            echo "::error::Repository variable VITE_YANDEX_MAPS_API_KEY is missing. Refusing to publish without Yandex Maps."
+            exit 1
+          fi
       - name: Build site
         env:
           VITE_FEEDBACK_API_URL: ${{ vars.VITE_FEEDBACK_API_URL }}

@@ -36,6 +36,12 @@ describe('Maidenhead / QTH locator conversions', () => {
     }
   })
 
+  it('encodes clicked coordinates at the current extended locator precision', () => {
+    const locator = encodeLocator([55.187, 61.374], 'AA00BB11CC'.length / 2)
+    expect(locator).toHaveLength('AA00BB11CC'.length)
+    expect(isValidLocator(locator)).toBe(true)
+  })
+
   it('handles world limits, including the exclusive north/east upper edges', () => {
     expect(encodeLocator([-90, -180], 1)).toBe('AA')
     expect(encodeLocator([90, 180], 1)).toBe('RR')
