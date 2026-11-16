@@ -1,7 +1,30 @@
 import { useEffect } from 'react'
 import type { Locale, Messages } from '../i18n'
+import {
+  formatHomePath,
+  formatLocatorPath,
+  parseLocatorPath
+} from '../locatorUrl'
 
-export function usePageLocale(locale: Locale, text: Messages): void {
+function setLink(rel: string, href: string, hreflang?: string) {
+  const selector = hreflang
+    ? `link[rel="${rel}"][hreflang="${hreflang}"]`
+    : `link[rel="${rel}"]:not([hreflang])`
+  let link = document.head.querySelector<HTMLLinkElement>(selector)
+  if (!link) {
+    link = document.createElement('link')
+    link.rel = rel
+    if (hreflang) link.hreflang = hreflang
+    document.head.append(link)
+  }
+  link.href = href
+}
+
+export function usePageLocale(
+  locale: Locale,
+  text: Messages,
+  pathname: string
+): void {
   useEffect(() => {
     document.documentElement.lang = locale
     document.title = text.pageTitle
@@ -24,10 +47,19 @@ export function usePageLocale(locale: Locale, text: Messages): void {
       .querySelector('meta[name="twitter:description"]')
       ?.setAttribute('content', text.pageDescription)
 
-    try {
-      window.localStorage.setItem('wwloc-locale', locale)
-    } catch {
-      // Storage is optional; the current locale remains available in React state.
-    }
-  }, [locale, text.pageDescription, text.pageTitle])
+    const route = parseLocatorPath(pathname)
+    const pathFor = (language: Locale) =>
+      route
+        ? formatLocatorPath(language, route.first, route.second)
+        : formatHomePath(language)
+    const origin = window.location.origin
+    const canonical = `${origin}${pathFor(locale)}`
+    setLink('canonical', canonical)
+    setLink('alternate', `${origin}${pathFor('ru')}`, 'ru')
+    setLink('alternate', `${origin}${pathFor('en')}`, 'en')
+    setLink('alternate', `${origin}${pathFor('ru')}`, 'x-default')
+    document
+      .querySelector('meta[property="og:url"]')
+      ?.setAttribute('content', canonical)
+  }, [locale, pathname, text.pageDescription, text.pageTitle])
 }

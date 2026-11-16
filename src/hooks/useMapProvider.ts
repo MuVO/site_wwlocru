@@ -14,7 +14,7 @@ export function useMapProvider(
   const [provider, setProvider] = useState<MapProvider>(
     hasYandexApiKey ? 'yandex' : 'osm'
   )
-  const view = useRef<MapView>({ center: [55.17, 61.4], zoom: 11 })
+  const view = useRef<MapView>({ center: [20, 0], zoom: 2 })
 
   function selectProvider(nextProvider: MapProvider) {
     if (nextProvider === provider) return

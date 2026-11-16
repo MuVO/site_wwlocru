@@ -1,19 +1,7 @@
 export type Locale = 'ru' | 'en'
 
 export function detectLocale(): Locale {
-  try {
-    const saved = window.localStorage.getItem('wwloc-locale')
-    if (saved === 'ru' || saved === 'en') return saved
-  } catch {
-    // Storage may be unavailable in private or restricted browsing contexts.
-  }
-
-  const languages = navigator.languages?.length
-    ? navigator.languages
-    : [navigator.language]
-  const preferred =
-    languages.find((language) => Boolean(language))?.toLowerCase() ?? 'en'
-  return preferred.startsWith('ru') ? 'ru' : 'en'
+  return /^\/en(?:\/|$)/i.test(window.location.pathname) ? 'en' : 'ru'
 }
 
 export const messages = {
@@ -23,6 +11,10 @@ export const messages = {
       'Найдите Maidenhead QTH-локатор на карте, определите локатор по координатам и измерьте расстояние между радиолюбительскими станциями.',
     searchHint:
       'Введите QTH-локатор, чтобы найти его на карте, или выберите точку на карте — её локатор появится в поле.',
+    approximateLocation:
+      'Местоположение приблизительно оценено по IP через ipapi.co; точность ограничена.',
+    locationUnavailable:
+      'Не удалось определить местоположение. Введите локатор или выберите точку на карте.',
     searchLabel: 'QTH-локатор',
     searchButton: 'Найти на карте',
     searchMode: 'Поиск',
@@ -46,6 +38,10 @@ export const messages = {
     inclination: 'Магнитное наклонение',
     outsideModel: 'вне периода модели',
     firstLocator: 'Первый локатор',
+    bearingToSecond: 'Азимут на второй',
+    bearingToFirst: 'Азимут на первый',
+    trueBearing: 'истинный',
+    magneticBearing: 'магнитный',
     aboutTitle: 'О WWLoc и QTH-локаторе',
     aboutParagraphs: [
       'Maidenhead Locator System (система IARU Locator) — компактный способ передать местоположение радиостанции в эфире. Локаторы применяют в радиосвязях, соревнованиях VHF/UHF и для расчёта расстояния между станциями.',
@@ -91,6 +87,10 @@ export const messages = {
       'Find a Maidenhead QTH locator on the map, look up a locator from coordinates, and measure distances between amateur radio stations.',
     searchHint:
       'Enter a QTH locator to find it on the map, or select a point on the map to show its locator.',
+    approximateLocation:
+      'Location estimated approximately from your IP via ipapi.co; accuracy is limited.',
+    locationUnavailable:
+      'Could not determine your location. Enter a locator or select a point on the map.',
     searchLabel: 'QTH locator',
     searchButton: 'Find on map',
     searchMode: 'Search',
@@ -114,6 +114,10 @@ export const messages = {
     inclination: 'Magnetic inclination',
     outsideModel: 'outside model validity',
     firstLocator: 'First locator',
+    bearingToSecond: 'Bearing to the second locator',
+    bearingToFirst: 'Bearing to the first locator',
+    trueBearing: 'true',
+    magneticBearing: 'magnetic',
     aboutTitle: 'About WWLoc and QTH locators',
     aboutParagraphs: [
       'The Maidenhead Locator System (the IARU Locator) is a compact way for radio amateurs to exchange station locations over the air. Locators are used in QSOs, VHF/UHF contests, and to calculate distances between stations.',

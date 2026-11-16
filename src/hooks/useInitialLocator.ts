@@ -15,6 +15,28 @@ type UseInitialLocatorOptions = {
   onInitialSearch: (locator: string) => void
   onInitialDistance: (first: string, second: string) => void
   onGeolocated: (locator: string) => void
+  onIpGeolocated: (locator: string) => void
+  onLocationUnavailable: () => void
+}
+
+async function locateByIp(signal: AbortSignal): Promise<[number, number]> {
+  const response = await fetch('https://ipapi.co/json/', { signal })
+  if (!response.ok) throw new Error('IP location request failed')
+
+  const result: { latitude?: unknown; longitude?: unknown; error?: unknown } =
+    await response.json()
+  if (
+    result.error ||
+    typeof result.latitude !== 'number' ||
+    typeof result.longitude !== 'number' ||
+    !Number.isFinite(result.latitude) ||
+    !Number.isFinite(result.longitude) ||
+    Math.abs(result.latitude) > 90 ||
+    Math.abs(result.longitude) > 180
+  ) {
+    throw new Error('IP location response is invalid')
+  }
+  return [result.latitude, result.longitude]
 }
 
 export function useInitialLocator(options: UseInitialLocatorOptions): void {
@@ -34,37 +56,63 @@ export function useInitialLocator(options: UseInitialLocatorOptions): void {
       return
     }
 
-    const initial = (
-      hash?.first ??
-      (current.initialHash.slice(1) || 'MO05QE')
-    ).toUpperCase()
-    current.locator.current = initial
-    current.setLocator(initial)
-    current.onInitialSearch(initial)
+    if (hash?.first) {
+      current.locator.current = hash.first
+      current.setLocator(hash.first)
+      current.onInitialSearch(hash.first)
+    }
   }, [])
 
   useEffect(() => {
     const current = latestOptions.current
-    if (parseLocatorHash(current.initialHash) || !navigator.geolocation) return
+    if (parseLocatorHash(current.initialHash)) return
 
     let active = true
-    navigator.geolocation.getCurrentPosition(
-      ({ coords }) => {
+    const abortController = new AbortController()
+    let timeout: number | undefined
+    const ipFallback = async () => {
+      timeout = window.setTimeout(() => abortController.abort(), 8_000)
+      try {
+        const locator = encodeLocator(
+          await locateByIp(abortController.signal),
+          2
+        )
+        if (timeout !== undefined) window.clearTimeout(timeout)
         const latest = latestOptions.current
         if (!active || latest.touched.current) return
-        const locator = encodeLocator([coords.latitude, coords.longitude])
         latest.locator.current = locator
         latest.setLocator(locator)
-        latest.onGeolocated(locator)
-      },
-      () => {
-        // Geolocation is optional; keep the URL/default locator on failure.
-      },
-      { enableHighAccuracy: false, maximumAge: 300_000, timeout: 10_000 }
-    )
+        latest.onIpGeolocated(locator)
+      } catch {
+        if (timeout !== undefined) window.clearTimeout(timeout)
+        if (active && !latestOptions.current.touched.current)
+          latestOptions.current.onLocationUnavailable()
+      }
+    }
+
+    if (!navigator.geolocation) {
+      void ipFallback()
+    } else {
+      navigator.geolocation.getCurrentPosition(
+        ({ coords }) => {
+          const latest = latestOptions.current
+          if (!active || latest.touched.current) return
+          const locator = encodeLocator([coords.latitude, coords.longitude])
+          latest.locator.current = locator
+          latest.setLocator(locator)
+          latest.onGeolocated(locator)
+        },
+        () => {
+          void ipFallback()
+        },
+        { enableHighAccuracy: false, maximumAge: 300_000, timeout: 10_000 }
+      )
+    }
 
     return () => {
       active = false
+      if (timeout !== undefined) window.clearTimeout(timeout)
+      abortController.abort()
     }
   }, [])
 }

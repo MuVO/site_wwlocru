@@ -5,6 +5,48 @@ export interface LocatorHash {
   second?: string
 }
 
+export type LocatorPath = LocatorHash
+
+export function parseLocatorPath(pathname: string): LocatorPath | null {
+  const match = pathname.match(
+    /^\/(?:(en|ru)\/)?(locator|distance)\/([^/]+)\/?$/i
+  )
+  if (!match) return null
+
+  const mode = match[2].toLowerCase()
+  const value = match[3].split(':')
+  if (mode === 'locator' && value.length === 1 && isValidLocator(value[0])) {
+    return { first: value[0].toUpperCase() }
+  }
+  if (
+    mode === 'distance' &&
+    value.length === 2 &&
+    value.every(isValidLocator)
+  ) {
+    return { first: value[0].toUpperCase(), second: value[1].toUpperCase() }
+  }
+  return null
+}
+
+export function localeFromPath(pathname: string): 'ru' | 'en' {
+  return /^\/en(?:\/|$)/i.test(pathname) ? 'en' : 'ru'
+}
+
+export function formatLocatorPath(
+  locale: 'ru' | 'en',
+  first: string,
+  second?: string
+): string {
+  const prefix = locale === 'en' ? '/en' : ''
+  return second
+    ? `${prefix}/distance/${first.toUpperCase()}:${second.toUpperCase()}`
+    : `${prefix}/locator/${first.toUpperCase()}`
+}
+
+export function formatHomePath(locale: 'ru' | 'en'): string {
+  return locale === 'en' ? '/en/' : '/'
+}
+
 export function parseLocatorHash(hash: string): LocatorHash | null {
   const parts = hash.replace(/^#/, '').split(':')
   if (parts.length === 1 && isValidLocator(parts[0])) {

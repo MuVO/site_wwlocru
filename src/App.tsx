@@ -7,7 +7,13 @@ import {
   isValidLocator,
   type MagneticReading
 } from './locatorMath'
-import { parseLocatorHash } from './locatorUrl'
+import {
+  formatHomePath,
+  formatLocatorHash,
+  formatLocatorPath,
+  parseLocatorHash,
+  parseLocatorPath
+} from './locatorUrl'
 import type { DistanceRoute } from './locatorRoute'
 import { detectLocale, messages, type Locale } from './i18n'
 import { AboutSection } from './components/AboutSection'
@@ -27,7 +33,6 @@ import { useLocatorActions } from './hooks/useLocatorActions'
 import { useFeedback } from './hooks/useFeedback'
 import { useMapProvider } from './hooks/useMapProvider'
 
-const INITIAL_LOCATOR = 'MO05QE'
 const MAP_API_KEY = import.meta.env.VITE_YANDEX_MAPS_API_KEY
 
 function App() {
@@ -45,10 +50,15 @@ function App() {
   const localeRef = useRef(locale)
   localeRef.current = locale
   const t = messages[locale]
-  const [locator, setLocator] = useState(INITIAL_LOCATOR)
+  const [locator, setLocator] = useState('')
   const locatorRef = useRef(locator)
   locatorRef.current = locator
-  const initialHashRef = useRef(window.location.hash)
+  const initialPathRoute = parseLocatorPath(window.location.pathname)
+  const initialHashRef = useRef(
+    initialPathRoute
+      ? formatLocatorHash(initialPathRoute.first, initialPathRoute.second)
+      : window.location.hash
+  )
   const locatorTouchedRef = useRef(false)
   const [secondLocator, setSecondLocator] = useState('')
   const [searchMode, setSearchMode] = useState<SearchMode>('search')
@@ -66,6 +76,9 @@ function App() {
   const [yandexReady, setYandexReady] = useState(false)
   const [osmReady, setOsmReady] = useState(false)
   const [error, setError] = useState('')
+  const [locationNotice, setLocationNotice] = useState<
+    'approximate' | 'unavailable' | null
+  >(null)
   const [mapStatus, setMapStatus] = useState<'loading' | 'ready' | 'error'>(
     'loading'
   )
@@ -75,7 +88,7 @@ function App() {
   )
   const feedback = useFeedback(locale)
 
-  usePageLocale(locale, t)
+  usePageLocale(locale, t, window.location.pathname)
 
   const { updateMap, measureDistance } = useLocatorActions({
     locale: localeRef,
@@ -101,12 +114,21 @@ function App() {
     setSearchMode,
     onInitialSearch: updateMap,
     onInitialDistance: measureDistance,
-    onGeolocated: updateMap
+    onGeolocated: (value) => {
+      setLocationNotice(null)
+      updateMap(value)
+    },
+    onIpGeolocated: (value) => {
+      setLocationNotice('approximate')
+      updateMap(value)
+    },
+    onLocationUnavailable: () => setLocationNotice('unavailable')
   })
 
   function handleMapClick(coordinates: [number, number]) {
     const next = encodeLocator(coordinates)
     locatorTouchedRef.current = true
+    setLocationNotice(null)
     if (searchModeRef.current === 'distance') {
       setSecondLocator(next)
       measureDistance(locatorRef.current, next, false, false)
@@ -120,7 +142,7 @@ function App() {
     const initialRoute = parseLocatorHash(initialHashRef.current)
     if (initialRoute?.second)
       measureDistance(initialRoute.first, initialRoute.second)
-    else updateMap(locatorRef.current)
+    else if (isValidLocator(locatorRef.current)) updateMap(locatorRef.current)
   }
 
   useDistanceOverlays({
@@ -174,6 +196,7 @@ function App() {
 
   function runSearch(value = locator) {
     locatorTouchedRef.current = true
+    setLocationNotice(null)
     const next = value.trim().toUpperCase()
     setLocator(next)
     setDistanceRoute(null)
@@ -203,10 +226,29 @@ function App() {
     setError('')
   }
 
+  function changeLocale(nextLocale: Locale) {
+    const route =
+      searchMode === 'distance' &&
+      isValidLocator(locator) &&
+      isValidLocator(secondLocator)
+        ? { first: locator, second: secondLocator }
+        : isValidLocator(locator)
+          ? { first: locator }
+          : null
+    window.history.replaceState(
+      null,
+      '',
+      route
+        ? formatLocatorPath(nextLocale, route.first, route.second)
+        : formatHomePath(nextLocale)
+    )
+    setLocale(nextLocale)
+  }
+
   return (
     <div className="app-shell" id="top">
       <header className="topbar">
-        <a className="brand" href="#top" aria-label="WWLOC">
+        <a className="brand" href={formatHomePath(locale)} aria-label="WWLOC">
           WWL
           <span className="brand-globe" aria-hidden="true">
             ◉
@@ -222,7 +264,7 @@ function App() {
             type="button"
             lang="ru"
             aria-pressed={locale === 'ru'}
-            onClick={() => setLocale('ru')}
+            onClick={() => changeLocale('ru')}
           >
             RU
           </button>
@@ -230,7 +272,7 @@ function App() {
             type="button"
             lang="en"
             aria-pressed={locale === 'en'}
-            onClick={() => setLocale('en')}
+            onClick={() => changeLocale('en')}
           >
             EN
           </button>
@@ -251,9 +293,17 @@ function App() {
           magnetic={magnetic}
           secondMagnetic={secondMagnetic}
           error={error}
+          locationNotice={
+            locationNotice === 'approximate'
+              ? t.approximateLocation
+              : locationNotice === 'unavailable'
+                ? t.locationUnavailable
+                : ''
+          }
           onSubmit={submitLocatorForm}
           onLocatorChange={(value) => {
             locatorTouchedRef.current = true
+            setLocationNotice(null)
             setLocator(value)
             if (searchMode === 'distance') {
               if (isValidLocator(value) && isValidLocator(secondLocator))

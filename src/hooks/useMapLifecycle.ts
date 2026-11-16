@@ -65,8 +65,8 @@ export function useMapLifecycle(options: UseMapLifecycleOptions): void {
         const map = new window.ymaps.Map(
           current.yandexNode.current,
           {
-            center: [55.17, 61.4],
-            zoom: 11,
+            center: current.refs.view.current.center,
+            zoom: current.refs.view.current.zoom,
             controls: ['zoomControl', 'searchControl', 'typeSelector']
           },
           { suppressMapOpenBlock: true, yandexMapDisablePoiInteractivity: true }
@@ -130,16 +130,19 @@ export function useMapLifecycle(options: UseMapLifecycleOptions): void {
       )
       refs.openStreetMap.current = map
 
-      const locator = isValidLocator(current.locator.current)
-        ? current.locator.current
-        : 'MO05QE'
-      const bounds = decodeLocator(locator)
-      refs.osmLocatorRectangle.current = L.rectangle(toLeafletBounds(bounds), {
-        color: '#1747ff',
-        weight: 2,
-        fillColor: '#1747ff',
-        fillOpacity: 0.16
-      }).addTo(map)
+      const hasLocator = isValidLocator(current.locator.current)
+      const bounds = hasLocator ? decodeLocator(current.locator.current) : null
+      if (bounds) {
+        refs.osmLocatorRectangle.current = L.rectangle(
+          toLeafletBounds(bounds),
+          {
+            color: '#1747ff',
+            weight: 2,
+            fillColor: '#1747ff',
+            fillOpacity: 0.16
+          }
+        ).addTo(map)
+      }
 
       const route = parseLocatorHash(current.initialHash)
       const visibleBounds = route?.second
@@ -148,11 +151,13 @@ export function useMapLifecycle(options: UseMapLifecycleOptions): void {
             decodeLocator(route.second)
           )
         : bounds
-      map.fitBounds(toLeafletBounds(visibleBounds), {
-        maxZoom: 13,
-        padding: [36, 36],
-        animate: false
-      })
+      if (visibleBounds) {
+        map.fitBounds(toLeafletBounds(visibleBounds), {
+          maxZoom: 13,
+          padding: [36, 36],
+          animate: false
+        })
+      }
       map.on('moveend zoomend', () => {
         const center = map.getCenter()
         refs.view.current = {

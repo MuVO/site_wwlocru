@@ -9,7 +9,7 @@ import {
   magneticReading,
   type MagneticReading
 } from '../locatorMath'
-import { formatLocatorHash } from '../locatorUrl'
+import { formatLocatorPath } from '../locatorUrl'
 import {
   combinedRouteBounds,
   createDistanceRoute,
@@ -92,7 +92,16 @@ export function useLocatorActions(options: UseLocatorActionsOptions) {
         }
 
         const locatorBounds = toLeafletBounds(bounds)
-        osmRectangle.current?.setBounds(locatorBounds)
+        if (osmRectangle.current) {
+          osmRectangle.current.setBounds(locatorBounds)
+        } else if (openStreetMap.current) {
+          osmRectangle.current = L.rectangle(locatorBounds, {
+            color: '#1747ff',
+            weight: 2,
+            fillColor: '#1747ff',
+            fillOpacity: 0.16
+          }).addTo(openStreetMap.current)
+        }
         if (fitMap)
           openStreetMap.current?.fitBounds(locatorBounds, {
             maxZoom: 13,
@@ -100,7 +109,11 @@ export function useLocatorActions(options: UseLocatorActionsOptions) {
             animate: true
           })
         setError('')
-        window.history.replaceState(null, '', formatLocatorHash(code))
+        window.history.replaceState(
+          null,
+          '',
+          formatLocatorPath(locale.current, code)
+        )
       } catch {
         setError(messages[locale.current].invalidLocator)
       }
@@ -146,7 +159,7 @@ export function useLocatorActions(options: UseLocatorActionsOptions) {
       window.history.replaceState(
         null,
         '',
-        formatLocatorHash(route.first, route.second)
+        formatLocatorPath(locale.current, route.first, route.second)
       )
 
       if (!fitMap) return
