@@ -116,11 +116,11 @@ function App() {
     onInitialDistance: measureDistance,
     onGeolocated: (value) => {
       setLocationNotice(null)
-      updateMap(value)
+      updateMap(value, true, false)
     },
     onIpGeolocated: (value) => {
       setLocationNotice('approximate')
-      updateMap(value)
+      updateMap(value, true, false)
     },
     onLocationUnavailable: () => setLocationNotice('unavailable')
   })

@@ -41,6 +41,9 @@ export function usePageLocale(
       .querySelector('meta[property="og:locale"]')
       ?.setAttribute('content', locale === 'ru' ? 'ru_RU' : 'en_US')
     document
+      .querySelector('meta[property="og:locale:alternate"]')
+      ?.setAttribute('content', locale === 'ru' ? 'en_US' : 'ru_RU')
+    document
       .querySelector('meta[name="twitter:title"]')
       ?.setAttribute('content', text.pageTitle)
     document

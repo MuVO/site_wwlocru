@@ -35,7 +35,7 @@ npm run preview
 
 ## Поиск и SEO
 
-Страница включает canonical URL, языковые `hreflang`-ссылки, метаданные Open Graph/Twitter, JSON-LD `WebApplication`, `robots.txt` и `sitemap.xml`. Язык документа и описания страницы синхронизируются с URL и выбранным RU/EN интерфейсом.
+Индексируемые языковые страницы (`/` и `/en/`) имеют отдельные canonical URL, согласованные `hreflang`-ссылки и метаданные Open Graph/Twitter; они перечислены в `sitemap.xml`. `robots.txt` разрешает обход сайта и указывает sitemap. Маршруты `/locator/:grid` и `/distance/:pair` — клиентские состояния инструмента, поэтому не перечисляются в sitemap. GitHub Pages отдаёт их через `404.html` с HTTP-статусом 404; для индексации таких маршрутов со статусом 200 потребуется хостинг с rewrite/SSR.
 
 Математика локаторов находится в `src/locatorMath.ts` и работает в браузере без запросов к серверу приложения:
 

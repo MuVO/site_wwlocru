@@ -53,7 +53,7 @@ export function useLocatorActions(options: UseLocatorActionsOptions) {
   } = options
 
   const updateMap = useCallback(
-    (code: string, fitMap = true) => {
+    (code: string, fitMap = true, updateUrl = true) => {
       try {
         const bounds = decodeLocator(code)
         setMagnetic(magneticReading(centerOfGeometry(bounds)))
@@ -109,11 +109,12 @@ export function useLocatorActions(options: UseLocatorActionsOptions) {
             animate: true
           })
         setError('')
-        window.history.replaceState(
-          null,
-          '',
-          formatLocatorPath(locale.current, code)
-        )
+        if (updateUrl)
+          window.history.replaceState(
+            null,
+            '',
+            formatLocatorPath(locale.current, code)
+          )
       } catch {
         setError(messages[locale.current].invalidLocator)
       }
